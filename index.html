@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModSync Setup Manual</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0E0E0E;
+            color: #F0F0F0;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #0E0E0E;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #F0F0F0;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #888888;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .lang-btn {
+            padding: 8px 18px;
+            background-color: #0E0E0E;
+            color: #888888;
+            border: 1px solid #303030;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover {
+            background-color: #1B1B1B;
+            border-color: #303030;
+        }
+
+        .lang-btn.active {
+            background-color: #20256A;
+            border-color: #2F3699;
+            color: #F0F0F0;
+        }
+
+        .selection-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .selection-card {
+            background-color: #0E0E0E;
+            padding: 15px;
+            border: 1px solid #303030;
+        }
+
+        .selection-card h3 {
+            color: #F0F0F0;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .selector-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .selector-btn {
+            padding: 10px 15px;
+            background-color: #0E0E0E;
+            color: #888888;
+            border: 1px solid #303030;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .selector-btn:hover {
+            background-color: #1B1B1B;
+            border-color: #303030;
+        }
+
+        .selector-btn.active {
+            background-color: #20256A;
+            border-color: #2F3699;
+            color: #F0F0F0;
+        }
+
+        .step {
+            background-color: #0E0E0E;
+            padding: 20px;
+            border: 1px solid #303030;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .step h2 {
+            color: #F0F0F0;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #303030;
+        }
+
+        .step-description {
+            color: #888888;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #F0F0F0;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #0E0E0E;
+            border: 1px solid #303030;
+            color: #F0F0F0;
+            font-size: 1rem;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2F3699;
+            background-color: #1B1B1B;
+        }
+
+        .command-block-container {
+            position: relative;
+            margin: 15px 0;
+        }
+
+        .command-block {
+            background-color: #0E0E0E;
+            padding: 15px;
+            border: 1px solid #303030;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            min-height: 60px;
+        }
+
+        .command-block code {
+            color: #F0F0F0;
+            white-space: pre;
+            display: block;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #20256A;
+            color: #F0F0F0;
+            border: 1px solid #2F3699;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background-color: #2F3699;
+        }
+
+        .copy-btn.copied {
+            background-color: #1B1B1B;
+            border-color: #303030;
+        }
+
+        .note {
+            background-color: #0E0E0E;
+            border-left: 3px solid #2F3699;
+            padding: 12px;
+            margin-top: 10px;
+            color: #888888;
+            font-size: 0.9rem;
+        }
+
+        .cmd-instructions {
+            background-color: #0E0E0E;
+            border: 1px solid #303030;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .cmd-step {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .cmd-step-number {
+            position: absolute;
+            left: 0;
+            color: #2F3699;
+            font-weight: 600;
+        }
+
+        .launcher-instructions {
+            margin-top: 20px;
+        }
+
+        .instruction-step {
+            margin-bottom: 12px;
+            color: #F0F0F0;
+            font-size: 0.95rem;
+        }
+
+        .instruction-step-number {
+            color: #2F3699;
+            font-weight: 600;
+        }
+
+        .settings-icon {
+            color: #2F3699;
+            margin: 0 5px;
+        }
+
+        .final-command {
+            background-color: #0E0E0E;
+            padding: 18px;
+            border: 1px solid #303030;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .final-command h4 {
+            color: #F0F0F0;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #888888;
+            font-size: 0.85rem;
+            border-top: 1px solid #303030;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .selection-section {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .selector-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1><i class="fas fa-cogs"></i> ModSync Setup</h1>
+        <p class="subtitle" id="subtitle">Automated modpack synchronization for Minecraft</p>
+
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="de">Deutsch</button>
+            <button class="lang-btn" data-lang="it">Italiano</button>
+        </div>
+    </header>
+
+    <div class="selection-section">
+        <div class="selection-card">
+            <h3><i class="fas fa-desktop"></i> <span id="os-title">Operating System</span></h3>
+            <div class="selector-group">
+                <button class="selector-btn active" data-os="windows">Windows</button>
+                <button class="selector-btn" data-os="linux">Linux</button>
+            </div>
+        </div>
+
+        <div class="selection-card">
+            <h3><i class="fas fa-rocket"></i> <span id="launcher-title">Minecraft Launcher</span></h3>
+            <div class="selector-group">
+                <button class="selector-btn active" data-launcher="modrinth">Modrinth</button>
+                <button class="selector-btn" data-launcher="prism">Prism Launcher</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="step">
+        <h2 id="step1-title">1. Enter Mods URL</h2>
+        <p class="step-description" id="step1-desc">Provide the URL to your modpack configuration file.</p>
+
+        <div class="input-group">
+            <label for="mods-url" id="mods-url-label">Mods URL:</label>
+            <input type="text" id="mods-url" placeholder="https://example.com/mods">
+        </div>
+    </div>
+
+    <div class="step">
+        <h2 id="step2-title">2. Download & Setup ModSync</h2>
+        <p class="step-description" id="step2-desc"></p>
+
+        <div id="windows-cmd-instructions" class="cmd-instructions">
+            <div class="cmd-step">
+                <span class="cmd-step-number">1.</span> <span id="windows-cmd-step1">Press <code style="background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;">Win + R</code>, type <code style="background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;">cmd</code> and press Enter</span>
+            </div>
+            <div class="cmd-step">
+                <span class="cmd-step-number">2.</span> <span id="windows-cmd-step2">Alternatively, search for "Command Prompt" in the Start Menu</span>
+            </div>
+        </div>
+
+        <div id="windows-commands" class="command-block-container">
+            <div class="command-block">
+                <code id="windows-commands-text">@echo off
+powershell -Command "Invoke-WebRequest -Uri 'https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync.exe' -OutFile '%USERPROFILE%\ModSync.exe'"
+echo Copy this: %USERPROFILE%\ModSync.exe</code>
+            </div>
+            <button class="copy-btn" id="copy-windows-commands">Copy All</button>
+        </div>
+
+        <div id="linux-commands" class="command-block-container" style="display: none;">
+            <div class="command-block">
+                <code id="linux-commands-text">wget https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync -O ~/ModSync
+chmod +x ~/ModSync
+echo "Copy this: ~/ModSync"</code>
+            </div>
+            <button class="copy-btn" id="copy-linux-commands">Copy All</button>
+        </div>
+
+        <div class="note" id="step2-note"></div>
+    </div>
+
+    <div class="step">
+        <h2 id="step3-title">3. Enter ModSync Path</h2>
+        <p class="step-description" id="step3-desc">Enter the path that was displayed in the previous step.</p>
+
+        <div class="input-group">
+            <label for="modsync-path" id="modsync-path-label">ModSync Path:</label>
+            <input type="text" id="modsync-path" placeholder="C:\Users\YourName\ModSync.exe or /home/YourName/ModSync">
+        </div>
+
+        <div class="note" id="step3-note">
+            This is the path that was displayed after running the commands above.
+        </div>
+    </div>
+
+    <div class="step">
+        <h2 id="step4-title">4. Configure Your Launcher</h2>
+        <p class="step-description" id="step4-desc">Follow these steps for your launcher to set up the pre-launch command.</p>
+
+        <div id="modrinth-instructions" class="launcher-instructions">
+            <div class="instruction-step"><span class="instruction-step-number">1.</span> <span id="modrinth-step1">Select your modpack in Modrinth App</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">2.</span> <span id="modrinth-step2">Click the <i class="fas fa-cog settings-icon"></i> Settings icon in the top right</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">3.</span> <span id="modrinth-step3">Select "Launch hooks"</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">4.</span> <span id="modrinth-step4">Enable "Custom launch hooks"</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">5.</span> <span id="modrinth-step5">Paste the command below into "Pre-launch"</span></div>
+        </div>
+
+        <div id="prism-instructions" class="launcher-instructions" style="display: none;">
+            <div class="instruction-step"><span class="instruction-step-number">1.</span> <span id="prism-step1">Right-click the modpack/instance and select "Edit"</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">2.</span> <span id="prism-step2">Select "Settings" on the left side</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">3.</span> <span id="prism-step3">Go to the "Custom Commands" tab</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">4.</span> <span id="prism-step4">Enable "Override Global Settings"</span></div>
+            <div class="instruction-step"><span class="instruction-step-number">5.</span> <span id="prism-step5">Paste the command below into "Pre-launch"</span></div>
+        </div>
+
+        <div class="command-block-container">
+            <div class="command-block">
+                <code id="final-command-text">[ModSyncPath] --modsurl [ModsUrl]</code>
+            </div>
+            <button class="copy-btn" id="copy-final-command">Copy Command</button>
+        </div>
+        <div class="note" id="final-command-note">
+            This command will update automatically when you fill in both fields above.
+        </div>
+    </div>
+
+    <footer>
+        <p id="footer-text">ModSync Setup Manual | Created for ModSync by Ritze03</p>
+    </footer>
+</div>
+
+<script>
+    // Translation data with casual wording
+    const translations = {
+        en: {
+            subtitle: "Automated modpack synchronization for Minecraft",
+            osTitle: "Operating System",
+            launcherTitle: "Minecraft Launcher",
+            step1Title: "1. Enter Mods URL",
+            step1Desc: "Provide the URL to your modpack configuration file.",
+            modsUrlLabel: "Mods URL:",
+            step2Title: "2. Download & Setup ModSync",
+            step2DescWindows: "First, open Command Prompt, then run the following commands to install ModSync and copy the path to it.",
+            step2DescLinux: "Open your terminal and run the following commands to install ModSync and copy the path to it.",
+            step2NoteWindows: "Run these commands in Command Prompt. The path will be displayed at the end.",
+            step2NoteLinux: "Run these commands in your terminal. The path will be displayed at the end.",
+            windowsCmdStep1: "Press <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, type <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> and press Enter",
+            windowsCmdStep2: "Alternatively, search for 'Command Prompt' in the Start Menu",
+            step3Title: "3. Enter ModSync Path",
+            step3Desc: "Enter the path that was displayed in the previous step.",
+            modsyncPathLabel: "ModSync Path:",
+            step3Note: "This is the path that was displayed after running the commands above.",
+            step4Title: "4. Configure Your Launcher",
+            step4Desc: "Follow these steps for your launcher to set up the pre-launch command.",
+            finalCommandNote: "This command will update automatically when you fill in both fields above.",
+            footerText: "ModSync Setup Manual | Created for ModSync by Ritze03",
+            modrinthStep1: "Select your modpack in Modrinth App",
+            modrinthStep2: "Click the <i class='fas fa-cog settings-icon'></i> Settings icon in the top right",
+            modrinthStep3: 'Select "Launch hooks"',
+            modrinthStep4: 'Enable "Custom launch hooks"',
+            modrinthStep5: 'Paste the command below into "Pre-launch"',
+            prismStep1: 'Right-click the modpack/instance and select "Edit"',
+            prismStep2: 'Select "Settings" on the left side',
+            prismStep3: 'Go to the "Custom Commands" tab',
+            prismStep4: 'Enable "Override Global Settings"',
+            prismStep5: 'Paste the command below into "Pre-launch"'
+        },
+        de: {
+            subtitle: "Automatische Modpack-Synchronisierung für Minecraft",
+            osTitle: "Betriebssystem",
+            launcherTitle: "Minecraft Launcher",
+            step1Title: "1. Mods-URL eingeben",
+            step1Desc: "Gib die URL zu deiner Modpack-Konfigurationsdatei an.",
+            modsUrlLabel: "Mods-URL:",
+            step2Title: "2. ModSync herunterladen & einrichten",
+            step2DescWindows: "Öffne zuerst die Eingabeaufforderung, dann führe die folgenden Befehle aus, um ModSync zu installieren und den Pfad zu kopieren.",
+            step2DescLinux: "Öffne dein Terminal und führe die folgenden Befehle aus, um ModSync zu installieren und den Pfad zu kopieren.",
+            step2NoteWindows: "Führe diese Befehle in der Eingabeaufforderung aus. Der Pfad wird am Ende angezeigt.",
+            step2NoteLinux: "Führe diese Befehle im Terminal aus. Der Pfad wird am Ende angezeigt.",
+            windowsCmdStep1: "Drücke <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, tippe <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> ein und drücke Enter",
+            windowsCmdStep2: "Alternativ suche nach 'Eingabeaufforderung' im Startmenü",
+            step3Title: "3. ModSync-Pfad eingeben",
+            step3Desc: "Gib den Pfad ein, der im vorherigen Schritt angezeigt wurde.",
+            modsyncPathLabel: "ModSync-Pfad:",
+            step3Note: "Dies ist der Pfad, der nach Ausführung der obigen Befehle angezeigt wurde.",
+            step4Title: "4. Launcher konfigurieren",
+            step4Desc: "Folge diesen Schritten für deinen Launcher, um den Pre-launch-Befehl einzurichten.",
+            finalCommandNote: "Dieser Befehl wird automatisch aktualisiert, wenn du beide Felder oben ausfüllst.",
+            footerText: "ModSync Setup Handbuch | Erstellt für ModSync von Ritze03",
+            modrinthStep1: "Wähle dein Modpack in der Modrinth App",
+            modrinthStep2: "Klicke auf das <i class='fas fa-cog settings-icon'></i> Zahnradsymbol oben rechts",
+            modrinthStep3: 'Wähle "Launch hooks"',
+            modrinthStep4: 'Aktiviere "Custom launch hooks"',
+            modrinthStep5: 'Füge den Befehl unten in "Pre-launch" ein',
+            prismStep1: 'Rechtsklick auf das Modpack/Instanz und "Edit" wählen',
+            prismStep2: 'Wähle "Settings" auf der linken Seite',
+            prismStep3: 'Gehe zum Tab "Custom Commands"',
+            prismStep4: 'Aktiviere "Override Global Settings"',
+            prismStep5: 'Füge den Befehl unten in "Pre-launch" ein'
+        },
+        it: {
+            subtitle: "Sincronizzazione automatica modpack per Minecraft",
+            osTitle: "Sistema Operativo",
+            launcherTitle: "Launcher Minecraft",
+            step1Title: "1. Inserisci URL Mods",
+            step1Desc: "Fornisci l'URL del file di configurazione del tuo modpack.",
+            modsUrlLabel: "URL Mods:",
+            step2Title: "2. Scarica & Configura ModSync",
+            step2DescWindows: "Prima apri il Prompt dei comandi, poi esegui i seguenti comandi per installare ModSync e copiare il percorso.",
+            step2DescLinux: "Apri il terminale ed esegui i seguenti comandi per installare ModSync e copiare il percorso.",
+            step2NoteWindows: "Esegui questi comandi nel Prompt dei comandi. Il percorso verrà visualizzato alla fine.",
+            step2NoteLinux: "Esegui questi comandi nel terminale. Il percorso verrà visualizzato alla fine.",
+            windowsCmdStep1: "Premi <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, digita <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> e premi Invio",
+            windowsCmdStep2: "In alternativa cerca 'Prompt dei comandi' nel Menu Start",
+            step3Title: "3. Inserisci Percorso ModSync",
+            step3Desc: "Inserisci il percorso visualizzato nel passaggio precedente.",
+            modsyncPathLabel: "Percorso ModSync:",
+            step3Note: "Questo è il percorso visualizzato dopo aver eseguito i comandi sopra.",
+            step4Title: "4. Configura il tuo Launcher",
+            step4Desc: "Segui questi passaggi per il tuo launcher per impostare il comando pre-lancio.",
+            finalCommandNote: "Questo comando si aggiorna automaticamente quando compili entrambi i campi sopra.",
+            footerText: "Manuale Setup ModSync | Creato per ModSync da Ritze03",
+            modrinthStep1: "Seleziona il tuo modpack nell'App Modrinth",
+            modrinthStep2: "Clicca l'<i class='fas fa-cog settings-icon'></i> icona Impostazioni in alto a destra",
+            modrinthStep3: 'Seleziona "Launch hooks"',
+            modrinthStep4: 'Abilita "Custom launch hooks"',
+            modrinthStep5: 'Incolla il comando qui sotto in "Pre-launch"',
+            prismStep1: 'Tasto destro sul modpack/istanza e seleziona "Edit"',
+            prismStep2: 'Seleziona "Settings" sul lato sinistro',
+            prismStep3: 'Vai alla scheda "Custom Commands"',
+            prismStep4: 'Abilita "Override Global Settings"',
+            prismStep5: 'Incolla il comando qui sotto in "Pre-launch"'
+        }
+    };
+
+    // Current settings
+    let currentLang = 'en';
+    let currentOS = 'windows';
+    let currentLauncher = 'modrinth';
+
+    // DOM elements
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const osButtons = document.querySelectorAll('.selector-btn[data-os]');
+    const launcherButtons = document.querySelectorAll('.selector-btn[data-launcher]');
+    const modsUrlInput = document.getElementById('mods-url');
+    const modsyncPathInput = document.getElementById('modsync-path');
+    const finalCommandText = document.getElementById('final-command-text');
+    const copyFinalCommandBtn = document.getElementById('copy-final-command');
+    const step2Desc = document.getElementById('step2-desc');
+    const step2Note = document.getElementById('step2-note');
+
+    // Initialize the page
+    function initializePage() {
+        updateLanguage();
+        updateOSDisplay();
+        updateLauncherDisplay();
+        updateFinalCommand();
+        updateStep2Description();
+
+        // Set up copy buttons
+        document.getElementById('copy-windows-commands').addEventListener('click', function() {
+            const text = document.getElementById('windows-commands-text').textContent;
+            copyToClipboard(text);
+            this.classList.add('copied');
+            this.textContent = 'Copied!';
+            setTimeout(() => {
+                this.classList.remove('copied');
+                this.textContent = 'Copy All';
+            }, 2000);
+        });
+
+        document.getElementById('copy-linux-commands').addEventListener('click', function() {
+            const text = document.getElementById('linux-commands-text').textContent;
+            copyToClipboard(text);
+            this.classList.add('copied');
+            this.textContent = 'Copied!';
+            setTimeout(() => {
+                this.classList.remove('copied');
+                this.textContent = 'Copy All';
+            }, 2000);
+        });
+
+        // Set up final command copy button
+        copyFinalCommandBtn.addEventListener('click', function() {
+            const command = finalCommandText.textContent;
+            copyToClipboard(command);
+            this.classList.add('copied');
+            this.textContent = 'Copied!';
+            setTimeout(() => {
+                this.classList.remove('copied');
+                this.textContent = 'Copy Command';
+            }, 2000);
+        });
+
+        // Update placeholder based on OS
+        updatePlaceholder();
+    }
+
+    // Language switching
+    langButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            langButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentLang = this.getAttribute('data-lang');
+            updateLanguage();
+            updateStep2Description();
+        });
+    });
+
+    // OS switching
+    osButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            osButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentOS = this.getAttribute('data-os');
+            updateOSDisplay();
+            updatePlaceholder();
+            updateFinalCommand();
+            updateStep2Description();
+        });
+    });
+
+    // Launcher switching
+    launcherButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            launcherButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentLauncher = this.getAttribute('data-launcher');
+            updateLauncherDisplay();
+        });
+    });
+
+    // Update content based on language
+    function updateLanguage() {
+        const t = translations[currentLang];
+
+        // Update all translatable elements
+        document.getElementById('subtitle').textContent = t.subtitle;
+        document.getElementById('os-title').textContent = t.osTitle;
+        document.getElementById('launcher-title').textContent = t.launcherTitle;
+        document.getElementById('step1-title').textContent = t.step1Title;
+        document.getElementById('step1-desc').textContent = t.step1Desc;
+        document.getElementById('mods-url-label').textContent = t.modsUrlLabel;
+        document.getElementById('step2-title').textContent = t.step2Title;
+        document.getElementById('step3-title').textContent = t.step3Title;
+        document.getElementById('step3-desc').textContent = t.step3Desc;
+        document.getElementById('modsync-path-label').textContent = t.modsyncPathLabel;
+        document.getElementById('step3-note').textContent = t.step3Note;
+        document.getElementById('step4-title').textContent = t.step4Title;
+        document.getElementById('step4-desc').textContent = t.step4Desc;
+        document.getElementById('final-command-note').textContent = t.finalCommandNote;
+        document.getElementById('footer-text').textContent = t.footerText;
+
+        // Update Windows CMD instructions
+        document.getElementById('windows-cmd-step1').innerHTML = t.windowsCmdStep1;
+        document.getElementById('windows-cmd-step2').innerHTML = t.windowsCmdStep2;
+
+        // Update launcher-specific texts (handling HTML in the translations)
+        document.getElementById('modrinth-step1').innerHTML = t.modrinthStep1;
+        document.getElementById('modrinth-step2').innerHTML = t.modrinthStep2;
+        document.getElementById('modrinth-step3').innerHTML = t.modrinthStep3;
+        document.getElementById('modrinth-step4').innerHTML = t.modrinthStep4;
+        document.getElementById('modrinth-step5').innerHTML = t.modrinthStep5;
+
+        document.getElementById('prism-step1').innerHTML = t.prismStep1;
+        document.getElementById('prism-step2').innerHTML = t.prismStep2;
+        document.getElementById('prism-step3').innerHTML = t.prismStep3;
+        document.getElementById('prism-step4').innerHTML = t.prismStep4;
+        document.getElementById('prism-step5').innerHTML = t.prismStep5;
+
+        // Update step 2 description
+        updateStep2Description();
+    }
+
+    // Update step 2 description based on OS
+    function updateStep2Description() {
+        const t = translations[currentLang];
+
+        if (currentOS === 'windows') {
+            step2Desc.textContent = t.step2DescWindows;
+            step2Note.textContent = t.step2NoteWindows;
+            document.getElementById('windows-cmd-instructions').style.display = 'block';
+        } else {
+            step2Desc.textContent = t.step2DescLinux;
+            step2Note.textContent = t.step2NoteLinux;
+            document.getElementById('windows-cmd-instructions').style.display = 'none';
+        }
+    }
+
+    // Update OS-specific display
+    function updateOSDisplay() {
+        if (currentOS === 'windows') {
+            document.getElementById('windows-commands').style.display = 'block';
+            document.getElementById('linux-commands').style.display = 'none';
+        } else {
+            document.getElementById('windows-commands').style.display = 'none';
+            document.getElementById('linux-commands').style.display = 'block';
+        }
+    }
+
+    // Update placeholder based on OS
+    function updatePlaceholder() {
+        if (currentOS === 'windows') {
+            modsyncPathInput.placeholder = "C:\\Users\\YourName\\ModSync.exe";
+        } else {
+            modsyncPathInput.placeholder = "/home/YourName/ModSync";
+        }
+    }
+
+    // Update launcher-specific display
+    function updateLauncherDisplay() {
+        if (currentLauncher === 'modrinth') {
+            document.getElementById('modrinth-instructions').style.display = 'block';
+            document.getElementById('prism-instructions').style.display = 'none';
+        } else {
+            document.getElementById('modrinth-instructions').style.display = 'none';
+            document.getElementById('prism-instructions').style.display = 'block';
+        }
+    }
+
+    // Update the final command when inputs change
+    modsUrlInput.addEventListener('input', updateFinalCommand);
+    modsyncPathInput.addEventListener('input', updateFinalCommand);
+
+    // Update the final command text
+    function updateFinalCommand() {
+        const modsUrl = modsUrlInput.value.trim();
+        const modsyncPath = modsyncPathInput.value.trim();
+
+        if (modsUrl && modsyncPath) {
+            finalCommandText.textContent = `${modsyncPath} --modsurl ${modsUrl}`;
+        } else {
+            finalCommandText.textContent = '[ModSyncPath] --modsurl [ModsUrl]';
+        }
+    }
+
+    // Utility function to copy text to clipboard
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    }
+
+    // Initialize the page when loaded
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
+</body>
+</html>
