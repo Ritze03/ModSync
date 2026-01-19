@@ -705,7 +705,7 @@ echo "Copy this: ~/ModSync"</code>
         const modsyncPath = modsyncPathInput.value.trim();
 
         if (modsUrl && modsyncPath) {
-            finalCommandText.textContent = `${modsyncPath} --modsurl ${modsUrl}`;
+            finalCommandText.textContent = `\"${modsyncPath}\" --modsurl ${modsUrl}`;
         } else {
             finalCommandText.textContent = '[ModSyncPath] --modsurl [ModsUrl]';
         }
