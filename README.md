@@ -1,4 +1,4 @@
-# [Setup Manual](https://ritze03.github.io/ModSync)
+# [Setup Manual](https://ritze03.github.io/ModSync) 
 
 # ModSync
 
