@@ -263,20 +263,6 @@
             margin: 0 5px;
         }
 
-        .final-command {
-            background-color: #0E0E0E;
-            padding: 18px;
-            border: 1px solid #303030;
-            margin-top: 20px;
-            position: relative;
-        }
-
-        .final-command h4 {
-            color: #F0F0F0;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-        }
-
         footer {
             text-align: center;
             padding: 15px;
@@ -348,20 +334,21 @@
 
         <div id="windows-cmd-instructions" class="cmd-instructions">
             <div class="cmd-step">
-                <span class="cmd-step-number">1.</span> <span id="windows-cmd-step1">Press <code style="background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;">Win + R</code>, type <code style="background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;">cmd</code> and press Enter</span>
+                <span class="cmd-step-number">1.</span> <span id="windows-cmd-step1">Press <code style="background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;">Win + R</code></span>
             </div>
             <div class="cmd-step">
-                <span class="cmd-step-number">2.</span> <span id="windows-cmd-step2">Alternatively, search for "Command Prompt" in the Start Menu</span>
+                <span class="cmd-step-number">2.</span> <span id="windows-cmd-step2">Execute the command below</span>
+            </div>
+            <div class="cmd-step">
+                <span class="cmd-step-number">3.</span> <span id="windows-cmd-step3">When the window closes, the path is automatically copied to your clipboard</span>
             </div>
         </div>
 
         <div id="windows-commands" class="command-block-container">
             <div class="command-block">
-                <code id="windows-commands-text">@echo off
-powershell -Command "Invoke-WebRequest -Uri 'https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync.exe' -OutFile '%USERPROFILE%\ModSync.exe'"
-echo Copy this: %USERPROFILE%\ModSync.exe</code>
+                <code id="windows-commands-text">powershell -Command "$p = Join-Path $env:USERPROFILE 'ModSync.exe'; Invoke-WebRequest 'https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync.exe' -OutFile $p; $p | Set-Clipboard"</code>
             </div>
-            <button class="copy-btn" id="copy-windows-commands">Copy All</button>
+            <button class="copy-btn" id="copy-windows-commands">Copy</button>
         </div>
 
         <div id="linux-commands" class="command-block-container" style="display: none;">
@@ -374,25 +361,20 @@ echo "Copy this: ~/ModSync"</code>
         </div>
 
         <div class="note" id="step2-note"></div>
-    </div>
-
-    <div class="step">
-        <h2 id="step3-title">3. Enter ModSync Path</h2>
-        <p class="step-description" id="step3-desc">Enter the path that was displayed in the previous step.</p>
-
+        <br>
         <div class="input-group">
             <label for="modsync-path" id="modsync-path-label">ModSync Path:</label>
-            <input type="text" id="modsync-path" placeholder="C:\Users\YourName\ModSync.exe or /home/YourName/ModSync">
+            <input type="text" id="modsync-path" placeholder="Press Ctrl+V to paste the path from the previous command">
         </div>
 
-        <div class="note" id="step3-note">
-            This is the path that was displayed after running the commands above.
+        <div class="note" id="step2-path-note">
+            After running the command, press Ctrl+V to paste the path into this field.
         </div>
     </div>
 
     <div class="step">
-        <h2 id="step4-title">4. Configure Your Launcher</h2>
-        <p class="step-description" id="step4-desc">Follow these steps for your launcher to set up the pre-launch command.</p>
+        <h2 id="step3-title">3. Configure Your Launcher</h2>
+        <p class="step-description" id="step3-desc">Follow these steps for your launcher to set up the pre-launch command.</p>
 
         <div id="modrinth-instructions" class="launcher-instructions">
             <div class="instruction-step"><span class="instruction-step-number">1.</span> <span id="modrinth-step1">Select your modpack in Modrinth App</span></div>
@@ -427,7 +409,7 @@ echo "Copy this: ~/ModSync"</code>
 </div>
 
 <script>
-    // Translation data with casual wording
+    // Translation data with improved wording
     const translations = {
         en: {
             subtitle: "Automated modpack synchronization for Minecraft",
@@ -437,18 +419,17 @@ echo "Copy this: ~/ModSync"</code>
             step1Desc: "Provide the URL to your modpack configuration file.",
             modsUrlLabel: "Mods URL:",
             step2Title: "2. Download & Setup ModSync",
-            step2DescWindows: "First, open Command Prompt, then run the following commands to install ModSync and copy the path to it.",
-            step2DescLinux: "Open your terminal and run the following commands to install ModSync and copy the path to it.",
-            step2NoteWindows: "Run these commands in Command Prompt. The path will be displayed at the end.",
+            step2DescWindows: "Run the command below to download ModSync. The file path will be copied to your clipboard automatically.",
+            step2DescLinux: "Open your terminal and run the commands below to download and set up ModSync.",
+            step2NoteWindows: "The PowerShell window will close automatically when done.",
             step2NoteLinux: "Run these commands in your terminal. The path will be displayed at the end.",
-            windowsCmdStep1: "Press <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, type <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> and press Enter",
-            windowsCmdStep2: "Alternatively, search for 'Command Prompt' in the Start Menu",
-            step3Title: "3. Enter ModSync Path",
-            step3Desc: "Enter the path that was displayed in the previous step.",
+            windowsCmdStep1: "Press <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>",
+            windowsCmdStep2: "Execute the command below",
+            windowsCmdStep3: "When the window closes, the path is automatically copied to your clipboard",
             modsyncPathLabel: "ModSync Path:",
-            step3Note: "This is the path that was displayed after running the commands above.",
-            step4Title: "4. Configure Your Launcher",
-            step4Desc: "Follow these steps for your launcher to set up the pre-launch command.",
+            step2PathNote: "After running the command, press Ctrl+V to paste the path into this field.",
+            step3Title: "3. Configure Your Launcher",
+            step3Desc: "Follow these steps for your launcher to set up the pre-launch command.",
             finalCommandNote: "This command will update automatically when you fill in both fields above.",
             footerText: "ModSync Setup Manual | Created for ModSync by Ritze03",
             modrinthStep1: "Select your modpack in Modrinth App",
@@ -470,18 +451,17 @@ echo "Copy this: ~/ModSync"</code>
             step1Desc: "Gib die URL zu deiner Modpack-Konfigurationsdatei an.",
             modsUrlLabel: "Mods-URL:",
             step2Title: "2. ModSync herunterladen & einrichten",
-            step2DescWindows: "Öffne zuerst die Eingabeaufforderung, dann führe die folgenden Befehle aus, um ModSync zu installieren und den Pfad zu kopieren.",
-            step2DescLinux: "Öffne dein Terminal und führe die folgenden Befehle aus, um ModSync zu installieren und den Pfad zu kopieren.",
-            step2NoteWindows: "Führe diese Befehle in der Eingabeaufforderung aus. Der Pfad wird am Ende angezeigt.",
+            step2DescWindows: "Führe den Befehl unten aus, um ModSync herunterzuladen. Der Dateipfad wird automatisch in deine Zwischenablage kopiert.",
+            step2DescLinux: "Öffne dein Terminal und führe die Befehle unten aus, um ModSync herunterzuladen und einzurichten.",
+            step2NoteWindows: "Das PowerShell-Fenster schließt sich automatisch, wenn der Vorgang abgeschlossen ist.",
             step2NoteLinux: "Führe diese Befehle im Terminal aus. Der Pfad wird am Ende angezeigt.",
-            windowsCmdStep1: "Drücke <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, tippe <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> ein und drücke Enter",
-            windowsCmdStep2: "Alternativ suche nach 'Eingabeaufforderung' im Startmenü",
-            step3Title: "3. ModSync-Pfad eingeben",
-            step3Desc: "Gib den Pfad ein, der im vorherigen Schritt angezeigt wurde.",
+            windowsCmdStep1: "Drücke <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>",
+            windowsCmdStep2: "Führe den Befehl unten aus",
+            windowsCmdStep3: "Wenn das Fenster schließt, wird der Pfad automatisch in deine Zwischenablage kopiert",
             modsyncPathLabel: "ModSync-Pfad:",
-            step3Note: "Dies ist der Pfad, der nach Ausführung der obigen Befehle angezeigt wurde.",
-            step4Title: "4. Launcher konfigurieren",
-            step4Desc: "Folge diesen Schritten für deinen Launcher, um den Pre-launch-Befehl einzurichten.",
+            step2PathNote: "Nachdem du den Befehl ausgeführt hast, drücke Strg+V, um den Pfad in dieses Feld einzufügen.",
+            step3Title: "3. Launcher konfigurieren",
+            step3Desc: "Folge diesen Schritten für deinen Launcher, um den Pre-launch-Befehl einzurichten.",
             finalCommandNote: "Dieser Befehl wird automatisch aktualisiert, wenn du beide Felder oben ausfüllst.",
             footerText: "ModSync Setup Handbuch | Erstellt für ModSync von Ritze03",
             modrinthStep1: "Wähle dein Modpack in der Modrinth App",
@@ -503,18 +483,17 @@ echo "Copy this: ~/ModSync"</code>
             step1Desc: "Fornisci l'URL del file di configurazione del tuo modpack.",
             modsUrlLabel: "URL Mods:",
             step2Title: "2. Scarica & Configura ModSync",
-            step2DescWindows: "Prima apri il Prompt dei comandi, poi esegui i seguenti comandi per installare ModSync e copiare il percorso.",
-            step2DescLinux: "Apri il terminale ed esegui i seguenti comandi per installare ModSync e copiare il percorso.",
-            step2NoteWindows: "Esegui questi comandi nel Prompt dei comandi. Il percorso verrà visualizzato alla fine.",
+            step2DescWindows: "Esegui il comando qui sotto per scaricare ModSync. Il percorso del file verrà automaticamente copiato negli appunti.",
+            step2DescLinux: "Apri il terminale ed esegui i comandi qui sotto per scaricare e configurare ModSync.",
+            step2NoteWindows: "La finestra PowerShell si chiuderà automaticamente al termine.",
             step2NoteLinux: "Esegui questi comandi nel terminale. Il percorso verrà visualizzato alla fine.",
-            windowsCmdStep1: "Premi <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>, digita <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>cmd</code> e premi Invio",
-            windowsCmdStep2: "In alternativa cerca 'Prompt dei comandi' nel Menu Start",
-            step3Title: "3. Inserisci Percorso ModSync",
-            step3Desc: "Inserisci il percorso visualizzato nel passaggio precedente.",
+            windowsCmdStep1: "Premi <code style='background-color: #1B1B1B; padding: 2px 6px; border: 1px solid #303030;'>Win + R</code>",
+            windowsCmdStep2: "Esegui il comando qui sotto",
+            windowsCmdStep3: "Quando la finestra si chiude, il percorso viene automaticamente copiato negli appunti",
             modsyncPathLabel: "Percorso ModSync:",
-            step3Note: "Questo è il percorso visualizzato dopo aver eseguito i comandi sopra.",
-            step4Title: "4. Configura il tuo Launcher",
-            step4Desc: "Segui questi passaggi per il tuo launcher per impostare il comando pre-lancio.",
+            step2PathNote: "Dopo aver eseguito il comando, premi Ctrl+V per incollare il percorso in questo campo.",
+            step3Title: "3. Configura il tuo Launcher",
+            step3Desc: "Segui questi passaggi per il tuo launcher per impostare il comando pre-lancio.",
             finalCommandNote: "Questo comando si aggiorna automaticamente quando compili entrambi i campi sopra.",
             footerText: "Manuale Setup ModSync | Creato per ModSync da Ritze03",
             modrinthStep1: "Seleziona il tuo modpack nell'App Modrinth",
@@ -562,7 +541,7 @@ echo "Copy this: ~/ModSync"</code>
             this.textContent = 'Copied!';
             setTimeout(() => {
                 this.classList.remove('copied');
-                this.textContent = 'Copy All';
+                this.textContent = 'Copy';
             }, 2000);
         });
 
@@ -639,18 +618,17 @@ echo "Copy this: ~/ModSync"</code>
         document.getElementById('step1-desc').textContent = t.step1Desc;
         document.getElementById('mods-url-label').textContent = t.modsUrlLabel;
         document.getElementById('step2-title').textContent = t.step2Title;
+        document.getElementById('modsync-path-label').textContent = t.modsyncPathLabel;
+        document.getElementById('step2-path-note').textContent = t.step2PathNote;
         document.getElementById('step3-title').textContent = t.step3Title;
         document.getElementById('step3-desc').textContent = t.step3Desc;
-        document.getElementById('modsync-path-label').textContent = t.modsyncPathLabel;
-        document.getElementById('step3-note').textContent = t.step3Note;
-        document.getElementById('step4-title').textContent = t.step4Title;
-        document.getElementById('step4-desc').textContent = t.step4Desc;
         document.getElementById('final-command-note').textContent = t.finalCommandNote;
         document.getElementById('footer-text').textContent = t.footerText;
 
         // Update Windows CMD instructions
         document.getElementById('windows-cmd-step1').innerHTML = t.windowsCmdStep1;
         document.getElementById('windows-cmd-step2').innerHTML = t.windowsCmdStep2;
+        document.getElementById('windows-cmd-step3').innerHTML = t.windowsCmdStep3;
 
         // Update launcher-specific texts (handling HTML in the translations)
         document.getElementById('modrinth-step1').innerHTML = t.modrinthStep1;
@@ -677,10 +655,12 @@ echo "Copy this: ~/ModSync"</code>
             step2Desc.textContent = t.step2DescWindows;
             step2Note.textContent = t.step2NoteWindows;
             document.getElementById('windows-cmd-instructions').style.display = 'block';
+            modsyncPathInput.placeholder = "Press Ctrl+V to paste the path from the previous command";
         } else {
             step2Desc.textContent = t.step2DescLinux;
             step2Note.textContent = t.step2NoteLinux;
             document.getElementById('windows-cmd-instructions').style.display = 'none';
+            modsyncPathInput.placeholder = "/home/YourName/ModSync";
         }
     }
 
@@ -698,7 +678,7 @@ echo "Copy this: ~/ModSync"</code>
     // Update placeholder based on OS
     function updatePlaceholder() {
         if (currentOS === 'windows') {
-            modsyncPathInput.placeholder = "C:\\Users\\YourName\\ModSync.exe";
+            modsyncPathInput.placeholder = "Press Ctrl+V to paste the path from the previous command";
         } else {
             modsyncPathInput.placeholder = "/home/YourName/ModSync";
         }
