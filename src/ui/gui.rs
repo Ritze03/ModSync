@@ -300,7 +300,7 @@ impl App for ModSyncApp {
             // Small delay to show completion message (optional)
             let ctx = ctx.clone();
             std::thread::spawn(move || {
-                std::thread::sleep(std::time::Duration::from_millis(2000)); // 0.5 second delay
+                std::thread::sleep(std::time::Duration::from_millis(2000)); // 2 second delay
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
             });
         }
