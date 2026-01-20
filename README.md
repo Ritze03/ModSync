@@ -1,4 +1,4 @@
-# [Setup Manual](https://ritze03.github.io/ModSync/index.html)
+# [Setup Manual](https://ritze03.github.io/ModSync) 
 
 # ModSync
 
@@ -22,7 +22,7 @@ Build from source with Rust:
 
 ```bash
 git clone https://github.com/Ritze03/ModSync.git
-cd modsync
+cd ModSync
 cargo build --release
 ```
 
