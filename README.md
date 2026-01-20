@@ -22,7 +22,7 @@ Build from source with Rust:
 
 ```bash
 git clone https://github.com/Ritze03/ModSync.git
-cd modsync
+cd ModSync
 cargo build --release
 ```
 
