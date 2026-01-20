@@ -124,6 +124,12 @@ async fn main() -> anyhow::Result<()> {
             // Print live progress
             println!("Progress: {}/{}", processed, total);
 
+            if(processed == total) {
+                println!("Done!");
+                sleep(Duration::from_millis(500)).await;
+                break;
+            }
+
             sleep(Duration::from_millis(250)).await;
         }
     }

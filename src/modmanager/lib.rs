@@ -154,6 +154,7 @@ impl ModManager {
         let mut removed = Vec::new();
         let mut failed = Vec::new();
 
+
         for result in results {
             match result {
                 EntryResult::Downloaded(e) => downloaded.push(e),
@@ -162,6 +163,12 @@ impl ModManager {
                 EntryResult::Failed(e, msg) => failed.push((e, msg)),
             }
         }
+
+        println!("Downloaded: {:?}\n", downloaded);
+        println!("Skipped: {:?}\n", skipped);
+        println!("Removed: {:?}\n", removed);
+        println!("Failed: {:?}\n", failed);
+
 
         if let Some(tx) = &event_tx {
             let _ = tx.send(SyncEvent::Finished);
