@@ -357,7 +357,7 @@
 chmod +x ~/ModSync
 echo "Copy this: $(cd ~; pwd)/ModSync"</code>
             </div>
-            <button class="copy-btn" id="copy-linux-commands">Copy All</button>
+            <button class="copy-btn" id="copy-linux-commands">Copy</button>
         </div>
 
         <div class="note" id="step2-note"></div>
@@ -396,7 +396,7 @@ echo "Copy this: $(cd ~; pwd)/ModSync"</code>
             <div class="command-block">
                 <code id="final-command-text">[ModSyncPath] --modsurl [ModsUrl]</code>
             </div>
-            <button class="copy-btn" id="copy-final-command">Copy Command</button>
+            <button class="copy-btn" id="copy-final-command">Copy</button>
         </div>
         <div class="note" id="final-command-note">
             This command will update automatically when you fill in both fields above.
@@ -564,7 +564,7 @@ echo "Copy this: $(cd ~; pwd)/ModSync"</code>
             this.textContent = 'Copied!';
             setTimeout(() => {
                 this.classList.remove('copied');
-                this.textContent = 'Copy Command';
+                this.textContent = 'Copy';
             }, 2000);
         });
 
