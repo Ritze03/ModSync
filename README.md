@@ -4,6 +4,10 @@
 
 **ModSync** is a pre-launch tool for Minecraft that automatically synchronizes mods before starting the game. It ensures that required mods are downloaded, and unwanted mods are removed, helping you keep your mod folder consistent and up to date.  
 
+## TODO
+* Add transaction summary screen with a 5 second timeout to view.
+---
+
 ---
 
 ## Features
