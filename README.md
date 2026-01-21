@@ -2,14 +2,46 @@
 
 # ModSync
 
-**ModSync** is a pre-launch tool for Minecraft that automatically synchronizes mods before starting the game. It ensures that required mods are downloaded, and unwanted mods are removed, helping you keep your mod folder consistent and up to date.  
+**ModSync** is a pre-launch tool for Minecraft that automatically synchronizes mods before starting the game. It ensures that required mods are downloaded and unwanted mods are removed.
 
-## TODO
-* Add transaction summary screen with a 5 second timeout to view.
-* Add "Env" to define if the mod is meant for the server or the client.
-* Add human readable names to the file format
-* Add Support for Resource Packs and other patches (do it like modrinth: mods/filename, resourcepacks/filename).
----
+The goal of this project is to make it easy to push updates to your modpack. Your friends only need to set up ModSync once on their systems. After that, you can push updates by editing a single file.  
+No self-hosting required.
+
+## How it works
+Everyone who plays on your server needs to set up a pre-launch command once using the [Interactive Setup Manual](https://ritze03.github.io/ModSync).
+
+Modrinth, Prism, and other launchers will run the program before the game starts.
+
+The program fetches the list of mods from the specified **"Mods URL"**. Mods are downloaded or removed according to the contents of that file.
+
+ModSync runs ➡ ModSync fetches the mod list from the "Mods URL" ➡ ModSync checks the installed mods and updates them accordingly ➡ ModSync exits ➡ The game is launched.
+
+## How to set up
+#### Prerequisites
+* A way to host the mod list that allows you to edit it and provides access to the raw text file (GitHub or any similar service).
+* Get [**ModSyncUI**](https://github.com/Ritze03/ModSyncUI) to create and manage the mod list quickly and easily.
+
+#### 
+Upload your mod list and copy the raw text URL (GitHub example: https://raw.githubusercontent.com/****************). This will be your **"Mods URL"**.
+
+Send your friends the setup guide and the Mods URL.  
+Done.
+
+## Setup (on the server)
+If you host your Minecraft server on a root server, you can set up ModSync there as well.
+
+Download ModSync the same way you would on a client.
+
+In your launch script, add:  
+`"/home/<username>/ModSync" --modsurl <Mods URL> --path <Path to your server instance> --cli`
+
+**--path** is redundant if your working directory is already inside the server instance.
+
+# TODO
+* Add a transaction summary screen with a 5-second timeout.
+* Add an "Env" option to define whether a mod is meant for the server or the client.
+* Add human-readable names to the file format.
+* Add support for resource packs and other patches (similar to Modrinth: `mods/filename`, `resourcepacks/filename`).
 
 ---
 
