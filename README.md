@@ -6,6 +6,8 @@
 
 ## TODO
 * Add transaction summary screen with a 5 second timeout to view.
+* Add "Env" to define if the mod is meant for the server or the client.
+* Add human readable names to the file format
 ---
 
 ---
