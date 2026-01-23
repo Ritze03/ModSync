@@ -346,14 +346,14 @@
 
         <div id="windows-commands" class="command-block-container">
             <div class="command-block">
-                <code id="windows-commands-text">powershell -Command "$p = Join-Path $env:USERPROFILE 'ModSync.exe'; Invoke-WebRequest 'https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync.exe' -OutFile $p; $p | Set-Clipboard"</code>
+                <code id="windows-commands-text">powershell -Command "$p = Join-Path $env:USERPROFILE 'ModSync.exe'; Invoke-WebRequest 'https://github.com/Ritze03/ModSync/releases/download/v0.1.1/ModSync.exe' -OutFile $p; $p | Set-Clipboard"</code>
             </div>
             <button class="copy-btn" id="copy-windows-commands">Copy</button>
         </div>
 
         <div id="linux-commands" class="command-block-container" style="display: none;">
             <div class="command-block">
-                <code id="linux-commands-text">wget https://github.com/Ritze03/ModSync/releases/download/v0.1.0/ModSync -O ~/ModSync
+                <code id="linux-commands-text">wget https://github.com/Ritze03/ModSync/releases/download/v0.1.1/ModSync -O ~/ModSync
 chmod +x ~/ModSync
 echo "Copy this: $(cd ~; pwd)/ModSync"</code>
             </div>
