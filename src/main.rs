@@ -14,8 +14,9 @@ use tokio::sync::mpsc::unbounded_channel;
 use tokio::time::sleep;
 
 use crate::types::ModEntry;
-use crate::modmanager::{ModManager, SyncProgress};
-use crate::ui::ModSyncApp;
+use crate::modmanager::{ModManager, SyncProgress, SyncReport};
+use crate::ui::{theme, ModSyncApp};
+use crate::ui::transaction_log::TransactionLogApp;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -54,6 +55,12 @@ struct Args {
     /// Generate SHA256 hash of a file and exit
     #[arg(long, value_name = "FILE")]
     hash: Option<PathBuf>,
+}
+
+enum AppState {
+    Splash,
+    TransactionLog(SyncReport),
+    Exit,
 }
 
 #[tokio::main]
@@ -99,7 +106,10 @@ async fn main() -> anyhow::Result<()> {
 
     // Decide if we launch UI or splash mode
     if !args.cli {
-        // Full UI mode
+        // We'll use a channel to communicate between windows
+        let (report_tx, report_rx) = std::sync::mpsc::channel();
+
+        // First run the splash window
         let native_options = NativeOptions {
             viewport: egui::ViewportBuilder::default()
                 .with_inner_size([400.0, 260.0])
@@ -109,14 +119,47 @@ async fn main() -> anyhow::Result<()> {
             ..Default::default()
         };
 
-        eframe::run_native(
+        let _ = eframe::run_native(
             "ModSync",
             native_options,
-            Box::new(|cc| {
-                Ok(Box::new(ModSyncApp::new(cc, progress, event_rx)))
+            Box::new(move |cc| {
+                theme::setup_fonts(&cc.egui_ctx);
+                theme::setup_dark_theme(&cc.egui_ctx);
+                Ok(Box::new(ModSyncApp::new(
+                    cc,
+                    progress.clone(),
+                    event_rx,
+                    5,
+                    report_tx,
+                )))
             }),
-        ).expect("Failed to launch UI");
+        );
+
+        // After splash window closes, check if we need to show transaction log
+        if let Ok(report) = report_rx.try_recv() {
+            // Run transaction log window
+            let native_options = NativeOptions {
+                viewport: egui::ViewportBuilder::default()
+                    .with_inner_size([1500.0, 800.0])
+                    .with_min_inner_size([520.0, 320.0])
+                    .with_resizable(true)
+                    .with_decorations(true)
+                    .with_title("ModSync - Transaction Log"),
+                ..Default::default()
+            };
+
+            let _ = eframe::run_native(
+                "ModSync - Transaction Log",
+                native_options,
+                Box::new(move |cc| {
+                    theme::setup_fonts(&cc.egui_ctx);
+                    theme::setup_dark_theme(&cc.egui_ctx);
+                    Ok(Box::new(TransactionLogApp::new(report)))
+                }),
+            );
+        }
     } else {
+        // CLI mode
         loop {
             let processed = progress.processed();
             let total = progress.total;

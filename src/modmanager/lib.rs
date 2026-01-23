@@ -14,10 +14,10 @@ use tokio::sync::mpsc::UnboundedSender;
 use futures::{stream, StreamExt};
 
 /// Final report of a sync operation
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SyncReport {
     pub downloaded: Vec<ModEntry>,
-    pub skipped: Vec<ModEntry>,
+    pub unchanged: Vec<ModEntry>,
     pub removed: Vec<ModEntry>,
     pub failed: Vec<(ModEntry, String)>,
 }
@@ -28,7 +28,7 @@ pub struct SyncProgress {
     pub total: usize,
     pub processed: AtomicUsize,
     pub downloaded: AtomicUsize,
-    pub skipped: AtomicUsize,
+    pub unchanged: AtomicUsize,
     pub removed: AtomicUsize,
     pub failed: AtomicUsize,
 
@@ -42,7 +42,7 @@ impl SyncProgress {
             total,
             processed: AtomicUsize::new(0),
             downloaded: AtomicUsize::new(0),
-            skipped: AtomicUsize::new(0),
+            unchanged: AtomicUsize::new(0),
             removed: AtomicUsize::new(0),
             failed: AtomicUsize::new(0),
             last_mod: parking_lot::Mutex::new(None),
@@ -52,7 +52,7 @@ impl SyncProgress {
     /// Total number of mods processed so far
     pub fn processed(&self) -> usize {
         self.downloaded.load(Ordering::Relaxed)
-            + self.skipped.load(Ordering::Relaxed)
+            + self.unchanged.load(Ordering::Relaxed)
             + self.removed.load(Ordering::Relaxed)
             + self.failed.load(Ordering::Relaxed)
     }
@@ -61,7 +61,7 @@ impl SyncProgress {
     pub fn stats(&self) -> SyncStats {
         SyncStats {
             downloaded: self.downloaded.load(Ordering::Relaxed),
-            skipped: self.skipped.load(Ordering::Relaxed),
+            unchanged: self.unchanged.load(Ordering::Relaxed),
             removed: self.removed.load(Ordering::Relaxed),
             failed: self.failed.load(Ordering::Relaxed),
         }
@@ -82,7 +82,7 @@ impl SyncProgress {
 /// Simple struct for UI to read current numbers
 pub struct SyncStats {
     pub downloaded: usize,
-    pub skipped: usize,
+    pub unchanged: usize,
     pub removed: usize,
     pub failed: usize,
 }
@@ -92,10 +92,10 @@ pub struct SyncStats {
 #[derive(Debug, Clone)]
 pub enum SyncEvent {
     Downloaded { filename: String },
-    Skipped { filename: String },
+    Unchanged { filename: String },
     Removed { filename: String },
     Failed { filename: String, error: String },
-    Finished,
+    Finished(SyncReport),
 }
 
 pub struct ModManager;
@@ -150,7 +150,7 @@ impl ModManager {
 
 
         let mut downloaded = Vec::new();
-        let mut skipped = Vec::new();
+        let mut unchanged = Vec::new();
         let mut removed = Vec::new();
         let mut failed = Vec::new();
 
@@ -158,28 +158,29 @@ impl ModManager {
         for result in results {
             match result {
                 EntryResult::Downloaded(e) => downloaded.push(e),
-                EntryResult::Skipped(e) => skipped.push(e),
+                EntryResult::Unchanged(e) => unchanged.push(e),
                 EntryResult::Removed(e) => removed.push(e),
                 EntryResult::Failed(e, msg) => failed.push((e, msg)),
             }
         }
 
         println!("Downloaded: {:?}\n", downloaded);
-        println!("Skipped: {:?}\n", skipped);
+        println!("Unchanged: {:?}\n", unchanged);
         println!("Removed: {:?}\n", removed);
         println!("Failed: {:?}\n", failed);
 
-
-        if let Some(tx) = &event_tx {
-            let _ = tx.send(SyncEvent::Finished);
-        }
-
-        Ok(SyncReport {
+        let report = SyncReport {
             downloaded,
-            skipped,
+            unchanged,
             removed,
             failed,
-        })
+        };
+
+        if let Some(tx) = &event_tx {
+            let _ = tx.send(SyncEvent::Finished(report.clone()))?;
+        }
+
+        Ok(report)
     }
 
     async fn handle_entry(
@@ -211,9 +212,9 @@ impl ModManager {
                     }
                 }
             } else {
-                progress.skipped.fetch_add(1, Ordering::Relaxed);
-                send_event(&event_tx, SyncEvent::Skipped { filename: filename.clone() });
-                EntryResult::Skipped(entry)
+                progress.unchanged.fetch_add(1, Ordering::Relaxed);
+                send_event(&event_tx, SyncEvent::Unchanged { filename: filename.clone() });
+                EntryResult::Unchanged(entry)
             }
         } else {
             // Required mod, or optional selected: always check
@@ -226,9 +227,9 @@ impl ModManager {
                 }
                 Ok(false) => {
                     // File exists and hash matches
-                    progress.skipped.fetch_add(1, Ordering::Relaxed);
-                    send_event(&event_tx, SyncEvent::Skipped { filename: filename.clone() });
-                    EntryResult::Skipped(entry)
+                    progress.unchanged.fetch_add(1, Ordering::Relaxed);
+                    send_event(&event_tx, SyncEvent::Unchanged { filename: filename.clone() });
+                    EntryResult::Unchanged(entry)
                 }
                 Err(e) => {
                     progress.failed.fetch_add(1, Ordering::Relaxed);
@@ -315,7 +316,7 @@ impl ModManager {
 /// Internal per-entry result
 enum EntryResult {
     Downloaded(ModEntry),
-    Skipped(ModEntry),
+    Unchanged(ModEntry),
     Removed(ModEntry),
     Failed(ModEntry, String),
 }
